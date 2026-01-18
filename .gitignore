@@ -1,0 +1,27 @@
+# Eclipse / STM32CubeIDE workspace metadata
+.metadata/
+
+# STM32CubeIDE auto-generated
+Debug/
+Release/
+*.o
+*.elf
+*.map
+*.lst
+*.su
+*.bin
+*.hex
+
+
+# Misc
+*.log
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Build outputs (per project)
+**/Debug/
+**/Release/
+**/build/
+**/out/
