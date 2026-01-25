@@ -1,6 +1,7 @@
 #include "app.h"
 #include "b_g474e_dpow1.h"
 #include "measurements.h"
+#include "main.h"
 #include <stdio.h>
 
 static Meas_Voltages_t g_voltages;
@@ -11,9 +12,13 @@ static uint32_t Vout_mV;
 #define OVER_VOLTAGE_PROTECTION   ((uint16_t)5000)
 #define VDDA                      ((uint16_t)3300)
 
+
 extern ADC_HandleTypeDef   hadc1;
+extern ADC_HandleTypeDef   hadc2;
 extern HRTIM_HandleTypeDef hhrtim1;
 extern UART_HandleTypeDef  huart3;
+extern uint16_t adc2_buf[ADC2_BUF_SIZE];
+
 
 AppMode_t appMode = APP_MODE_DE_ENERGIZE;
 static AppMode_t prevAppMode = (AppMode_t)(-1);
@@ -22,6 +27,8 @@ static void APP_UpdateFaultState(void);
 static void APP_ReadVoltages(void);
 static void APP_HandleStateMachine(void);
 static void APP_LogStateIfChanged(void);
+
+
 
 void APP_Init(void)
 {
@@ -32,6 +39,8 @@ void APP_Init(void)
     BSP_LED_Init(LED5);
 
     BSP_JOY_Init(JOY1, JOY_MODE_GPIO, JOY_ALL);
+    //HAL_StatusTypeDef result = HAL_ADC_Start_DMA(&hadc2, (uint32_t*)adc2_buf, ADC2_BUF_SIZE);
+    //printf("HAL_ADC_Start_DMA returns : %02X \r\n", result);
 
     HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED);
     HAL_ADCEx_InjectedStart(&hadc1);
@@ -80,8 +89,25 @@ static void APP_ReadVoltages(void)
     MEAS_ReadVoltages(&g_voltages);
     Vin_mV  = g_voltages.vin_mV;
     Vout_mV = g_voltages.vout_mV;
+    HAL_StatusTypeDef status1, status2, status3 = HAL_OK;
 
     printf("Vin = %lumV, Vout = %lumV\r\n", Vin_mV, Vout_mV);
+
+    status1 = HAL_ADC_Start(&hadc2);  // Start single conversion
+    printf("HAL_ADC_Start = %02X\r\n", status1);
+    status2 = HAL_ADC_PollForConversion(&hadc2, 100);
+    printf("HAL_ADC_PollForConversion = %02X\r\n", status2);
+    if ((status1 == HAL_OK) && (status2 == HAL_OK))
+    {
+        uint32_t result = HAL_ADC_GetValue(&hadc2);
+        printf("ADC2 Result = %lu\r\n", result);
+    }
+    if ((ADC2->CR & ADC_CR_ADEN) == 0)
+    {
+        printf("ADC2 NOT ENABLED!\r\n");
+        printf("ISR = 0x%08lx\r\n", ADC2->ISR);
+        printf("CR = 0x%08lx\r\n",  ADC2->CR);
+    }
 }
 
 

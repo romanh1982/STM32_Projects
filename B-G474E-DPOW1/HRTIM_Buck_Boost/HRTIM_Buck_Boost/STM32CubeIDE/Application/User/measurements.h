@@ -1,8 +1,21 @@
+/*
+ * measurements.h
+ */
 #ifndef MEASUREMENTS_H
 #define MEASUREMENTS_H
 
 #include "stm32g4xx_hal.h"
 #include <stdint.h>
+
+
+#pragma once
+
+#define ADC2_BUF_SIZE 1024
+extern uint16_t adc2_buf[ADC2_BUF_SIZE];
+
+void ProcessCurrentSamples_FirstHalf(void);
+void ProcessCurrentSamples_SecondHalf(void);
+
 
 typedef struct
 {

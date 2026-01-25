@@ -76,6 +76,8 @@ void Error_Handler(void);
 #define JOY_LEFT_GPIO_Port GPIOC
 #define JOY_DOWN_Pin GPIO_PIN_5
 #define JOY_DOWN_GPIO_Port GPIOC
+#define DBG1_PB0_Pin GPIO_PIN_0
+#define DBG1_PB0_GPIO_Port GPIOB
 #define JOY_RIGHT_Pin GPIO_PIN_2
 #define JOY_RIGHT_GPIO_Port GPIOB
 #define JOY_UP_Pin GPIO_PIN_10

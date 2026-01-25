@@ -53,7 +53,6 @@ UART_HandleTypeDef huart3;
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
 
-extern uint16_t adc2_buf[ADC2_BUF_SIZE];
 
 /* BUCK cannot re-start until Vout capacitor is de-energized below this value */
 #define DE_ENERGIZING_THRESHOLD         ((uint16_t)2500)
@@ -319,7 +318,9 @@ static void MX_ADC2_Init(void)
   hadc2.Init.NbrOfConversion = 1;
   hadc2.Init.DiscontinuousConvMode = DISABLE;
   hadc2.Init.ExternalTrigConv = ADC_EXTERNALTRIG_HRTIM_TRG3;
-  hadc2.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_RISING;
+//  hadc2.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_RISING;
+//  hadc2.Init.ExternalTrigConv = ADC_SOFTWARE_START;
+  hadc2.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
   hadc2.Init.DMAContinuousRequests = ENABLE;
   hadc2.Init.Overrun = ADC_OVR_DATA_PRESERVED;
   hadc2.Init.OversamplingMode = DISABLE;
@@ -341,7 +342,7 @@ static void MX_ADC2_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN ADC2_Init 2 */
-  HAL_ADC_Start_DMA(&hadc2, (uint32_t*)adc2_buf, ADC2_BUF_SIZE);
+
   /* USER CODE END ADC2_Init 2 */
 
 }
@@ -626,6 +627,9 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(BUCKBOOST_USBPD_EN_GPIO_Port, BUCKBOOST_USBPD_EN_Pin, GPIO_PIN_RESET);
 
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(DBG1_PB0_GPIO_Port, DBG1_PB0_Pin, GPIO_PIN_RESET);
+
   /*Configure GPIO pins : JOY_SEL_Pin JOY_LEFT_Pin JOY_DOWN_Pin */
   GPIO_InitStruct.Pin = JOY_SEL_Pin|JOY_LEFT_Pin|JOY_DOWN_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
@@ -638,6 +642,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(BUCKBOOST_USBPD_EN_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : DBG1_PB0_Pin */
+  GPIO_InitStruct.Pin = DBG1_PB0_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(DBG1_PB0_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : JOY_RIGHT_Pin JOY_UP_Pin */
   GPIO_InitStruct.Pin = JOY_RIGHT_Pin|JOY_UP_Pin;

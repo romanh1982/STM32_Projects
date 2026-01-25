@@ -1,5 +1,11 @@
+/*
+ * measurements.c
+ */
 #include "measurements.h"
 #include <stdio.h>
+#include "main.h"
+
+uint16_t adc2_buf[ADC2_BUF_SIZE];
 
 /* --- ADC reference and resolution --- */
 #define MEAS_VDDA_mV           3300u      /* ADC reference in mV           */
@@ -37,4 +43,24 @@ void MEAS_ReadVoltages(Meas_Voltages_t *v)
     tmp = HAL_ADCEx_InjectedGetValue(s_hadc, ADC_INJECTED_RANK_2);
     tmp = (tmp * MEAS_VDDA_mV) / MEAS_ADC_FS_COUNTS;                 /* pin in mV   */
     v->vout_mV = (tmp * MEAS_VOUT_SCALE_NUM) / MEAS_VOUT_SCALE_DEN;  /* real Vout   */
+}
+
+
+void HAL_ADC_ConvHalfCpltCallback(ADC_HandleTypeDef* hadc)
+{
+  if (hadc->Instance == ADC2) {
+    // process first half of adc2_buf[]
+	  printf("Half DMA done\r\n");
+	  HAL_GPIO_TogglePin(DBG1_PB0_GPIO_Port, DBG1_PB0_Pin);
+  }
+  HAL_GPIO_TogglePin(DBG1_PB0_GPIO_Port, DBG1_PB0_Pin);
+}
+
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
+{
+  if (hadc->Instance == ADC2) {
+    // process second half of adc2_buf[]
+	  printf("Full DMA done\r\n");
+	  HAL_GPIO_TogglePin(DBG1_PB0_GPIO_Port, DBG1_PB0_Pin);
+  }
 }
