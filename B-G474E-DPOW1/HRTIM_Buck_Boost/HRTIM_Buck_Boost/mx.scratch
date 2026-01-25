@@ -3,10 +3,10 @@
   <FileVersion>3.0</FileVersion>
   <Workspace>
     <WorkspaceType>Single-project</WorkspaceType>
-    <WorkspacePath>C:\Users\roman\Documents\gitHub\STM32_Projects\B-G474E-DPOW1\HRTIM_Buck_Boost\HRTIM_Buck_Boost\</WorkspacePath>
+    <WorkspacePath>C:\myGit\STM32_Projects\B-G474E-DPOW1\HRTIM_Buck_Boost\HRTIM_Buck_Boost\</WorkspacePath>
     <underRoot>false</underRoot>
     <TrustZone>0</TrustZone>
-    <HAL_Driver>C:\Users\roman\STM32Cube\Repository\STM32Cube_FW_G4_V1.6.1</HAL_Driver>
+    <HAL_Driver>C:\Users\HEIR\STM32Cube\Repository\STM32Cube_FW_G4_V1.6.1</HAL_Driver>
     <CMSIS>Drivers/CMSIS</CMSIS>
     <Toolchain>STM32CubeIDE</Toolchain>
     <IocFile>HRTIM_Buck_Boost.ioc</IocFile>
@@ -66,7 +66,7 @@
                 
           </memories>
               
-          <startup>C:\Users\roman\STM32Cube\Repository\STM32Cube_FW_G4_V1.6.1\Drivers\CMSIS\Device\ST\STM32G4xx\Source\Templates\gcc\startup_stm32g474xx.s</startup>
+          <startup>C:\Users\HEIR\STM32Cube\Repository\STM32Cube_FW_G4_V1.6.1\Drivers\CMSIS\Device\ST\STM32G4xx\Source\Templates\gcc\startup_stm32g474xx.s</startup>
                 
           <LinkSettings>
             	

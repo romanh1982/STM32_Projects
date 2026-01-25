@@ -4,9 +4,7 @@
 #include "main.h"
 #include <stdio.h>
 
-static Meas_Voltages_t g_voltages;
-static uint32_t Vin_mV;
-static uint32_t Vout_mV;
+static Meas_Voltages_ADC1_t g_voltages;
 
 #define DE_ENERGIZING_THRESHOLD   ((uint16_t)2500)
 #define OVER_VOLTAGE_PROTECTION   ((uint16_t)5000)
@@ -14,7 +12,7 @@ static uint32_t Vout_mV;
 
 
 extern ADC_HandleTypeDef   hadc1;
-extern ADC_HandleTypeDef   hadc2;
+//extern ADC_HandleTypeDef   hadc2;
 extern HRTIM_HandleTypeDef hhrtim1;
 extern UART_HandleTypeDef  huart3;
 extern uint16_t adc2_buf[ADC2_BUF_SIZE];
@@ -87,27 +85,30 @@ static void APP_UpdateFaultState(void)
 static void APP_ReadVoltages(void)
 {
     MEAS_ReadVoltages(&g_voltages);
-    Vin_mV  = g_voltages.vin_mV;
-    Vout_mV = g_voltages.vout_mV;
-    HAL_StatusTypeDef status1, status2, status3 = HAL_OK;
 
-    printf("Vin = %lumV, Vout = %lumV\r\n", Vin_mV, Vout_mV);
+    printf("Raw values: I_IN_SENSE = %lu %lu %lu\r\n",
+    		g_voltages.BUCKBOOST_I_IN_SENSE_RAW,
+			g_voltages.BUCKBOOST_I_IN_SENSE_mV,
+			g_voltages.BUCKBOOST_I_IN_SENSE_SCALED
+			);
 
-    status1 = HAL_ADC_Start(&hadc2);  // Start single conversion
-    printf("HAL_ADC_Start = %02X\r\n", status1);
-    status2 = HAL_ADC_PollForConversion(&hadc2, 100);
-    printf("HAL_ADC_PollForConversion = %02X\r\n", status2);
-    if ((status1 == HAL_OK) && (status2 == HAL_OK))
-    {
-        uint32_t result = HAL_ADC_GetValue(&hadc2);
-        printf("ADC2 Result = %lu\r\n", result);
-    }
-    if ((ADC2->CR & ADC_CR_ADEN) == 0)
-    {
-        printf("ADC2 NOT ENABLED!\r\n");
-        printf("ISR = 0x%08lx\r\n", ADC2->ISR);
-        printf("CR = 0x%08lx\r\n",  ADC2->CR);
-    }
+    printf("Raw values: V_IN = %lu %lu %lu\r\n",
+    		g_voltages.BUCKBOOST_VIN_RAW,
+			g_voltages.BUCKBOOST_VIN_mV,
+			g_voltages.BUCKBOOST_VIN_SCALED
+			);
+
+    printf("Raw values: I_IN_AVG = %lu %lu %lu\r\n",
+    		g_voltages.BUCKBOOST_I_IN_AVG_RAW,
+			g_voltages.BUCKBOOST_I_IN_AVG_mV,
+			g_voltages.BUCKBOOST_I_IN_AVG_SCALED
+			);
+
+    printf("Raw values: Vout = %lu %lu %lu\r\n",
+    		g_voltages.BUCKBOOST_VOUT_RAW,
+			g_voltages.BUCKBOOST_VOUT_mV,
+			g_voltages.BUCKBOOST_VOUT_SCALED
+			);
 }
 
 
@@ -198,7 +199,7 @@ static void APP_HandleStateMachine(void)
             break;
 
         case APP_MODE_DE_ENERGIZE:
-            if (Vout_mV < DE_ENERGIZING_THRESHOLD) {
+            if (g_voltages.BUCKBOOST_VOUT_SCALED < DE_ENERGIZING_THRESHOLD) {
                 printf("Vout below threshold → BUCK\r\n");
                 appMode = APP_MODE_BUCK;
             }

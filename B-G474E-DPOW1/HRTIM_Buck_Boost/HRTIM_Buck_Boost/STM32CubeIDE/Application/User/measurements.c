@@ -4,6 +4,7 @@
 #include "measurements.h"
 #include <stdio.h>
 #include "main.h"
+#include <stdio.h>
 
 uint16_t adc2_buf[ADC2_BUF_SIZE];
 
@@ -27,22 +28,30 @@ void MEAS_Init(ADC_HandleTypeDef *hadc)
     s_hadc = hadc;
 }
 
-void MEAS_ReadVoltages(Meas_Voltages_t *v)
+void MEAS_ReadVoltages(Meas_Voltages_ADC1_t *adc1_meas)
 {
     uint32_t tmp;
 
-    if (s_hadc == NULL || v == NULL)
+    if (s_hadc == NULL || adc1_meas == NULL)
         return;
 
-    /* ----- Vin on injected rank 1 ----- */
-    tmp = HAL_ADCEx_InjectedGetValue(s_hadc, ADC_INJECTED_RANK_1);
-    tmp = (tmp * MEAS_VDDA_mV) / MEAS_ADC_FS_COUNTS;                 /* pin in mV   */
-    v->vin_mV = (tmp * MEAS_VIN_SCALE_NUM) / MEAS_VIN_SCALE_DEN;     /* real Vin    */
+    /* ----- BUCKBOOST_I_IN_SENSE on injected rank 1 ----- */
+    adc1_meas->BUCKBOOST_I_IN_SENSE_RAW = HAL_ADCEx_InjectedGetValue(s_hadc, ADC_INJECTED_RANK_1);
+    adc1_meas->BUCKBOOST_I_IN_SENSE_mV = (adc1_meas->BUCKBOOST_I_IN_SENSE_RAW * MEAS_VDDA_mV) / MEAS_ADC_FS_COUNTS;
+    adc1_meas->BUCKBOOST_I_IN_SENSE_SCALED = (adc1_meas->BUCKBOOST_I_IN_SENSE_mV * MEAS_VIN_SCALE_NUM) / MEAS_VIN_SCALE_DEN;
 
-    /* ----- Vout on injected rank 2 ----- */
-    tmp = HAL_ADCEx_InjectedGetValue(s_hadc, ADC_INJECTED_RANK_2);
-    tmp = (tmp * MEAS_VDDA_mV) / MEAS_ADC_FS_COUNTS;                 /* pin in mV   */
-    v->vout_mV = (tmp * MEAS_VOUT_SCALE_NUM) / MEAS_VOUT_SCALE_DEN;  /* real Vout   */
+    adc1_meas->BUCKBOOST_VIN_RAW = HAL_ADCEx_InjectedGetValue(s_hadc, ADC_INJECTED_RANK_2);
+    adc1_meas->BUCKBOOST_VIN_mV = (adc1_meas->BUCKBOOST_VIN_RAW * MEAS_VDDA_mV) / MEAS_ADC_FS_COUNTS;
+    adc1_meas->BUCKBOOST_VIN_SCALED = (adc1_meas->BUCKBOOST_VIN_mV * MEAS_VIN_SCALE_NUM) / MEAS_VIN_SCALE_DEN;
+
+    adc1_meas->BUCKBOOST_I_IN_AVG_RAW = HAL_ADCEx_InjectedGetValue(s_hadc, ADC_INJECTED_RANK_3);
+    adc1_meas->BUCKBOOST_I_IN_AVG_mV = (adc1_meas->BUCKBOOST_I_IN_AVG_RAW * MEAS_VDDA_mV) / MEAS_ADC_FS_COUNTS;
+    adc1_meas->BUCKBOOST_I_IN_AVG_SCALED = (adc1_meas->BUCKBOOST_I_IN_AVG_mV * MEAS_VIN_SCALE_NUM) / MEAS_VIN_SCALE_DEN;
+
+    adc1_meas->BUCKBOOST_VOUT_RAW = HAL_ADCEx_InjectedGetValue(s_hadc, ADC_INJECTED_RANK_4);
+    adc1_meas->BUCKBOOST_VOUT_mV = (adc1_meas->BUCKBOOST_VOUT_RAW * MEAS_VDDA_mV) / MEAS_ADC_FS_COUNTS;
+    adc1_meas->BUCKBOOST_VOUT_SCALED = (adc1_meas->BUCKBOOST_VOUT_mV * MEAS_VOUT_SCALE_NUM) / MEAS_VOUT_SCALE_DEN;
+
 }
 
 
