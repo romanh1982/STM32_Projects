@@ -1,0 +1,28 @@
+# === STM32CubeIDE ===
+**/Debug/
+**/Release/
+*.elf
+*.hex
+*.bin
+*.map
+*.lst
+
+# === MATLAB ===
+**/*.asv
+**/*.autosave
+**/slprj/
+**/work/
+**/simulink_autosave/
+**/*.mex*
+
+# === General ===
+*.log
+*.tmp
+*.bak
+*.DS_Store
+*.swp
+*.swo
+
+# === Git-Meta-Data ===
+**/.vscode
+**/.metadata
