@@ -212,6 +212,7 @@ void HRTIM1_TIMC_IRQHandler(void)
   switch(appMode)
   {
   case APP_MODE_BUCK:
+	  HAL_GPIO_TogglePin(DBG_PA6_GPIO_Port, DBG_PA6_Pin);
     /* Get current duty cycle value */
     CurrentDuty = LL_HRTIM_TIM_GetCompare1(HRTIM1, LL_HRTIM_TIMER_C);
     /* Increase the compare value up to 60% duty cycle and re-start from 33% */

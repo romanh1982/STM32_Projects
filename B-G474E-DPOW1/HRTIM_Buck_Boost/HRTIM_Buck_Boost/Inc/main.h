@@ -74,6 +74,8 @@ void Error_Handler(void);
 #define ADC1_IN3_PA2_I_IN_GPIO_Port GPIOA
 #define ADC1_IN4_PA3_VOUT_Pin GPIO_PIN_3
 #define ADC1_IN4_PA3_VOUT_GPIO_Port GPIOA
+#define DBG_PA6_Pin GPIO_PIN_6
+#define DBG_PA6_GPIO_Port GPIOA
 #define JOY_LEFT_Pin GPIO_PIN_4
 #define JOY_LEFT_GPIO_Port GPIOC
 #define JOY_DOWN_Pin GPIO_PIN_5

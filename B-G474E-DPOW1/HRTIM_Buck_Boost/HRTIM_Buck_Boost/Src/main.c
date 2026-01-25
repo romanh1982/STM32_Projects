@@ -562,6 +562,9 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(BUCKBOOST_USBPD_EN_GPIO_Port, BUCKBOOST_USBPD_EN_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(DBG_PA6_GPIO_Port, DBG_PA6_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(DBG1_PB0_GPIO_Port, DBG1_PB0_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : JOY_SEL_Pin JOY_LEFT_Pin JOY_DOWN_Pin */
@@ -582,6 +585,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(ADC1_IN1_PA0_I_IN_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : DBG_PA6_Pin */
+  GPIO_InitStruct.Pin = DBG_PA6_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(DBG_PA6_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : DBG1_PB0_Pin */
   GPIO_InitStruct.Pin = DBG1_PB0_Pin;
